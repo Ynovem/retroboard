@@ -7,6 +7,7 @@ use Response;
 use Illuminate\Support\Facades\Hash;
 use App\Sticky;
 use App\Board;
+use App\Group;
 
 class BoardController extends Controller
 {
@@ -20,10 +21,12 @@ class BoardController extends Controller
     public function displayBoard($bid, $tab){
     	$secure = Board::where('board_id', $bid)->pluck('secure')[0];
     	$stickies = Sticky::where('bid', $bid)->get();
+    	$groups = Group::where('board_id', $bid)->get();
     	if($secure != 0){
     		if(\Cookie::get($bid . '-unlocked') == 1){
     			return view('display', [
 					'stickies' => $stickies,
+					'groups' => $groups,
 					'bid' => $bid,
 					'tab' => $tab,
 					'protected' => 1
@@ -34,6 +37,7 @@ class BoardController extends Controller
     	} else {
     		return view('display', [
 				'stickies' => $stickies,
+				'groups' => $groups,
 				'bid' => $bid,
 				'tab' => $tab,
 				'protected' => 0
@@ -128,5 +132,11 @@ class BoardController extends Controller
     	$cookie_name = $bid . "-unlocked";
     	\Cookie::queue(\Cookie::forget($cookie_name));
     	return redirect('/');
+    }
+
+    public function group_add(Request $request){
+    	$stickyId = $request->input('stickyId');
+    	//$sticky = App\Sticky::find($stickyId);
+    	dd($stickyId);
     }
 }

@@ -99,6 +99,63 @@
     </div>
 </div>
 
+<!-- Group Add Modal -->
+<div class="modal fade" id="groupAddModal" tabindex="-1" role="dialog" aria-labelledby="groupAddModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="groupAddModalLabel">Assign group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Chose a group this sticky belongs to...
+                <form class="remove-board-form" action="{{ url('group_add/') }}" method="POST">
+                    <select name="">
+                        @foreach ($groups as $group)
+                            <option value="{{ $group->group_id }}">{{ $group->group_name }}</option>
+                        @endforeach
+                    </select>
+                    <button type="button" class="btn btn-outline-default btn-sm ml-2" id="group-create" data-toggle="modal" data-target="#groupCreateModal" data-bid="{{ $bid }}"><i class="fas fa-plus-circle pr-2" title="Create new group"></i>Create new group</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+                    <input class="hiddenBidBoxStickyId" type="hidden" value="0" name="stickyId">
+                    <button type="submit" class="btn btn-success">Assign</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Group Create Modal -->
+<div class="modal fade" id="groupCreateModal" tabindex="-1" role="dialog" aria-labelledby="groupCreateModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="groupCreateModal">Create group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Enter group name
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form>
+                    <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="bid" value="{{$bid}}">
+                    <input class="hiddenBidBoxGroup" type="hidden" value="0" name="bid">
+                    <button type="submit" class="btn btn-success">Assign</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Stickies list -->
 <div class="tab-content py-3 px-3 px-sm-0 mt-5 mb-5" id="nav-tabContent">
     <div class="tab-pane fade {{ $tab == '0' ? 'show active' : ''}}" id="nav-wentwell" role="tabpanel" aria-labelledby="nav-wentwell-tab">
@@ -107,13 +164,18 @@
                 @if($sticky->sticky_type==0)
                 <div class="note-base" id="note-base">
                     <div class="note-base-actions note{{ $sticky->sticky_type }}-actions" id="note-base-header">
-                        <form action="{{ url('remove/') }}" method="POST">
-                            <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
-                            <input type="hidden" value="single" name="mode">
-                            <input type="hidden" value="{{$sticky->sticky_id}}" name="sticky_id">
-                            <input type="hidden" value="{{ $bid }}" name="bid">
-                            <button type="submit" id="delete-single" class="btn btn-outline-light"><i class="fas fa-trash-alt"></i></button>
-                        </form>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <form action="{{ url('remove/') }}" method="POST">
+                                <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+                                <input type="hidden" value="single" name="mode">
+                                <input type="hidden" value="{{$sticky->sticky_id}}" name="sticky_id">
+                                <input type="hidden" value="{{ $bid }}" name="bid">
+                                <button type="submit" id="delete-single" class="btn btn-outline-light btn-sm" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                            <form>
+                                <button type="button" class="btn btn-outline-light btn-sm ml-2" id="group-add" data-toggle="modal" data-target="#groupAddModal" data-stickyId="{{$sticky->sticky_id}}"><i class="fas fa-object-group" title="Group"></i></button>
+                            </form>
+                        </div>
                     </div>
                     <div class="note-base-content note{{$sticky->sticky_type}}-content">
                         {{ $sticky->sticky_content }}

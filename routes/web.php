@@ -21,3 +21,4 @@ Route::post('/remove', 'BoardController@remove');
 Route::post('/export', 'BoardController@export');
 Route::post('/unlock', 'BoardController@unlock');
 Route::get('/lock', 'BoardController@lock');
+Route::post('/group_add', 'BoardController@group_add');

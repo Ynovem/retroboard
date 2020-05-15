@@ -14,6 +14,13 @@ $('#passwordModal').on('show.bs.modal', function (event) {
   modal.find('.hiddenBidBoxUnlock').val(bid);
 });
 
+$('#groupModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget);
+  var stickyId = button.data('stickyId');
+  var modal = $(this);
+  modal.find('.hiddenBidBoxStickyId').val(stickyId);
+});
+
 $(document).ready(function(){
 	$('#hideStickyDiv').prop("checked", false);
 	$('#hideStickyDiv').change(function(){
